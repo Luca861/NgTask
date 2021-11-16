@@ -7,6 +7,8 @@ import { ProjectContainerComponent } from './project/project-container/project-c
 import { ProjectDetailComponent } from './project/project-detail/project-detail.component';
 import { ProjectListComponent } from './project/project-list/project-list.component';
 import { ProjectFormComponent } from './project/project-form/project-form.component';
+import { HomeComponent } from './dashboard/home/home.component';
+import {AppRoutingModule} from "@app/app-routing.module";
 
 @NgModule({
   declarations: [
@@ -14,11 +16,13 @@ import { ProjectFormComponent } from './project/project-form/project-form.compon
     ProjectContainerComponent,
     ProjectDetailComponent,
     ProjectListComponent,
-    ProjectFormComponent
+    ProjectFormComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,
-    FormsModule
+    FormsModule,
+    AppRoutingModule
   ],
   providers: [],
   bootstrap: [AppComponent]
