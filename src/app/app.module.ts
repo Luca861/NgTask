@@ -9,6 +9,8 @@ import { ProjectListComponent } from './project/project-list/project-list.compon
 import { ProjectFormComponent } from './project/project-form/project-form.component';
 import { HomeComponent } from './dashboard/home/home.component';
 import {AppRoutingModule} from "@app/app-routing.module";
+import { NavbarComponent } from './layout/navbar/navbar.component';
+import { SectionHeaderComponent } from './shared/section-header/section-header.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +19,9 @@ import {AppRoutingModule} from "@app/app-routing.module";
     ProjectDetailComponent,
     ProjectListComponent,
     ProjectFormComponent,
-    HomeComponent
+    HomeComponent,
+    NavbarComponent,
+    SectionHeaderComponent
   ],
   imports: [
     BrowserModule,
