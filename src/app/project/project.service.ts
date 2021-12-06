@@ -1,66 +1,58 @@
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {Project} from "@app/models/Project";
+import { LogService } from '@app/shared/log.service';
+import { BehaviorSubject, Observable, throwError } from 'rxjs';
+import { catchError, retry, tap } from 'rxjs/operators'
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProjectService {
- private projects: Project[]=[
-{
-  id:1,
-  code:'NHusYJL',
-  name:'Progetto Alpha',
-  description:'Lorem ipsum dolor sit amet',
-  start: new Date(2021, 1, 30),
-  end: new Date(2019, 3, 15),
-  priority:'medium',
-  done:true,
-  tasks:[]
-},
-{
-  id:2,
-    code:'SjieYKl',
-  name:'Progetto Beta',
-  description:'Lorem ipsum dolor sit amet',
-  start: new Date(2019,3,30),
-  end:new Date(2019,6,15),
-  priority:'low',
-  done:true,
-  tasks:[]
-},
-{
-  id:3,
-    code:'POjeGBs',
-  name:'Progetto Gamma',
-  description:'Lorem Ipsum dolor sit amet',
-  start: new Date(2019,8,15),
-  priority:'low',
-  done:false,
-  tasks:[]
 
-},
-    ]
+  constructor(private httpClient:HttpClient, private logService:LogService) { }
 
-  constructor() { }
+  getAll():Observable<Project[]>{
+    return this.httpClient.get<Project[]>('http://localhost:3000/projects')
+    .pipe(
+    tap((data)=> this.logService.log(`getAll eseguito ${data}`)),
+    retry(3),
+    catchError(this.handleError)
 
-  getAll():Project[]{
-    return this.projects;
+    )}
+
+  add(project:Project): Observable<Project>{
+    const projectToAdd = {
+    ...project,
+    code: Math.random().toString(36).replace('0.','').substring(2,9),
+    done: false,
+    tasks: [],
+  };
+    return this.httpClient.post<Project>('http://localhost:3000/projects', projectToAdd)
+    .pipe(
+      tap((data)=> this.logService.log(`Add eseguito ${data}`)),
+      retry(3),
+      catchError(this.handleError)
+      )}
+
+  get(id:number):Observable<Project>{
+    return this.httpClient.get<Project>(`http://localhost:3000/projects/${id}`)
+    .pipe(
+      tap((data)=> this.logService.log(`Get eseguito ${data}`)),
+      retry(3),
+      catchError(this.handleError)
+      )}
+
+  private handleError(error: HttpErrorResponse){
+    if(error.error instanceof ErrorEvent){
+      console.error('An error occured',error.error.message);
+    } else {
+      console.error(
+        `Backend returned code ${error.status},` +
+        `body was: ${error.error}`);
+    }
+    return throwError(
+      'Something bad happened; please try again later.');
   }
+    }
 
-  add(project:Project):void {
-    this.projects.push({
-      ...project,
-      id: this.projects.length,
-      code: Math.random().toString(36).replace('0.','').substring(2,9),
-      done: false,
-      tasks: [],
-    });
-  }
-
-  get(id:number):Project{
-    return this.projects.find(project => project.id === id) as Project;
-  }
-
-
-
-}
