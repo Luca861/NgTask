@@ -1,11 +1,15 @@
 import {NgModule} from "@angular/core";
-import {Routes, RouterModule, Router} from "@angular/router";
-import {HomeComponent} from "@app/dashboard/home/home.component";
-import {ProjectContainerComponent} from "@app/project/project-container/project-container.component";
+import {Routes, RouterModule} from "@angular/router";
+import {HomeComponent} from "@app/modules/dashboard/pages/home/home.component";
 
 const routes: Routes = [
   {path: 'home', component: HomeComponent },
-  {path: 'projects', component: ProjectContainerComponent}
+  {
+    path:'projects',
+    loadChildren: ()=> import('./modules/project/project.module').then(m => m.ProjectModule )
+  },
+  {path: '', redirectTo: '/home', pathMatch:'full'},
+  {path:'**', redirectTo: '/home'}
 ];
 
 @NgModule({
